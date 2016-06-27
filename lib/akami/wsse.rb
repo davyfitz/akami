@@ -173,7 +173,11 @@ module Akami
 
     # Returns the WSSE password, encrypted for digest authentication.
     def digest_password
-      token = nonce + timestamp + password
+      if self.digest == :royal_mail_digest
+        token = nonce + timestamp + Digest::SHA1.digest(password)
+      else
+        token = nonce + timestamp + password
+      end
       Base64.encode64(Digest::SHA1.digest(token)).chomp!
     end
 
